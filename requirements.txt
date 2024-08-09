@@ -1,0 +1,14 @@
+fastapi
+sqlalchemy
+databases[postgresql]
+alembic
+pydantic
+uvicorn
+python-multipart
+psycopg2-binary
+google-generativeai
+pillow
+python-dotenv
+pytest 
+fastapi[all] 
+httpx
