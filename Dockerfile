@@ -12,4 +12,4 @@ EXPOSE 80
 ENV DATABASE_URL=sqlite:///./test.db
 
 # Run the application
-CMD ["sh", "-c", "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 80"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 80"]
