@@ -31,15 +31,16 @@ Refer to the detailed documentation included in this repository to set up the AP
    ```bash
    git clone https://github.com/cydal/ai-stylist.git
    cd ai-stylist
-
+   ```
 
 ## Install dependencies
 
+```bash
 python -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
-
+```
 
 
 ## Running the Application
@@ -56,8 +57,6 @@ pytest
 
 
 ### API Overview
-
-
 ### 1. **Create User**
 **Endpoint:** `/api/users/`
 **Method:** POST
@@ -153,7 +152,6 @@ pytest
 
 ```markdown
 # Database Schema Overview
-
 ## Users Table
 - id (INT, primary key): Unique identifier for the user.
 - username (VARCHAR): Username of the user.
@@ -165,6 +163,13 @@ pytest
 - answer (TEXT): The response provided by the system.
 - created_at (TIMESTAMP): The timestamp when the conversation was created.
 
+## Image Table
+- id (INT, primary key): Unique identifier for the conversation entry.
+- user_id (INT, foreign key): Foreign key linking to the Users table..
+- image_path (TEXT): The path to the image file..
+- tags (TEXT): Tags associated with the image.  .
+
+```
 
 # Deploying FastAPI Application to AWS ECS with Fargate
 
