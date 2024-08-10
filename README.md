@@ -6,15 +6,15 @@ The AI Stylist Backend API is an interface designed to enhance the fashion exper
 
 ### Features
 
-**User Management**: Allows the registration and management of user profiles, enabling personalized interactions and style suggestions.
-**Conversation Handling**: Facilitates real-time conversations with users, answering fashion-related queries and providing advice tailored to user preferences.
+**User Management**: Allows the registration and management of user profiles.
+**Conversation Handling**: Facilitates real-time conversations with users, answering fashion-related queries.
 **Image Analysis**: Integrates advanced image recognition capabilities to analyze clothing items uploaded by users, extracting relevant tags like color, style, and type.
 **Outfit Matching**: Leverages a combination of user data and sophisticated algorithms to propose outfit combinations that match user styles and preferences, making it easier for users to make fashion decisions.
-**Scalable**: Deployed on Google Cloud, the API ensures robust performance, scalability, and security, handling user data and interactions with utmost confidentiality.
+**Scalable**: Deployed on AWS ECS with Fargate.
 
 
 ### Aim
-This API aims to simplify the decision-making process in fashion by using artificial intelligence to provide contextually relevant and personalized style advice. It supports a seamless user experience, from querying fashion tips to uploading wardrobe items and receiving outfit recommendations.
+This API aims to simplify the decision-making process in fashion by using artificial intelligence to provide contextually relevant style advice. It supports a seamless user experience, from querying fashion tips to uploading wardrobe items and receiving outfit recommendations.
 
 ### Getting Started
 Refer to the detailed documentation included in this repository to set up the API locally or deploy it to a cloud environment. Quick start guides, usage examples, and configuration details are provided to help you integrate and utilize the API effectively in your projects or applications.
@@ -164,3 +164,84 @@ pytest
 - question (TEXT): The question asked by the user.
 - answer (TEXT): The response provided by the system.
 - created_at (TIMESTAMP): The timestamp when the conversation was created.
+
+
+# Deploying FastAPI Application to AWS ECS with Fargate
+
+## Overview
+
+This guide outlines the steps to deploy a FastAPI application containerized with Docker to AWS using Amazon Elastic Container Service (ECS) with the Fargate launch type. Fargate allows you to run containers without managing servers or clusters.
+
+## Prerequisites
+
+- AWS account
+- AWS CLI installed and configured
+- Docker installed on your local machine
+- FastAPI application Dockerized
+
+## Steps
+
+### Step 1: Prepare Your Docker Image
+
+1. **Build your Docker image locally:**
+```bash
+docker build -t aifashionstylist .
+```
+
+2. **Tag Docker image for Amazon ECR:**
+```bash
+docker tag aifashionstylist:latest
+your-account-id.dkr.ecr.your-region.amazonaws.com/aifashionstylist
+```
+
+### Step 2: Push Image to Amazon ECR
+
+1. **Create an ECR Repository:**
+- Navigate to the Amazon ECR console and create a new repository named `aifashionstylist`.
+```bash
+aws ecr create-repository \
+    --repository-name aifashionstylist
+```
+
+2. **Authenticate Docker to ECR Repository:**
+```bash
+aws ecr get-login-password --region your-region | docker login --username AWS --password-stdin your-account-id.dkr.ecr.your-region.amazonaws.com
+```
+
+3. **Push image to ECR:**
+```bash
+docker push your-account-id.dkr.ecr.your-region.amazonaws.com/myfastapiapp
+```
+
+### Step 3: Set Up ECS with Fargate
+
+1. **Create a Task Definition:**
+- Go to the ECS console and create a new task definition.
+- Select "Fargate" as the launch type.
+- Define the task size (CPU and memory).
+- Add a container definition with the image URL from ECR.
+- Set the listening port to 80.
+
+2. **Create a Cluster:**
+- In the ECS console, create a new cluster using the "Networking only" template for Fargate.
+
+3. **Create a Service:**
+- Within the cluster, create a new service.
+- Choose the task definition created earlier.
+- Specify the desired number of tasks.
+- Set up the network configuration:
+  - Select the VPC and subnets.
+  - Assign a security group that allows inbound traffic on port 80.
+  - Enable "Auto-assign public IP" if your tasks need to be reachable from the internet.
+
+
+## Accessing Your Application
+
+After deployment, access your application via the public IP of the Fargate tasks.
+
+
+## Additional Resources
+
+- [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/index.html)
+- [Amazon ECR Documentation](https://docs.aws.amazon.com/ecr/index.html)
+- [AWS Fargate Documentation](https://docs.aws.amazon.com/fargate/index.html)
